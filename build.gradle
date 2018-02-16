@@ -79,6 +79,16 @@ artifacts {
 
 apply from: "$rootDir/gradle/ide-integration.gradle"
 
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories.mavenDeployer {
+            repository(url: "https://repo.seeburger.de/archiva/repository/release/")
+			snapshotRepository(url: "https://repo.seeburger.de/archiva/repository/snapshot/")
+
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '1.9'
 }
