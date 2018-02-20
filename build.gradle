@@ -8,6 +8,7 @@ buildscript {
 }
 
 apply plugin: 'base'
+apply plugin: 'maven' // for install task as well as deploy dependencies
 
 description = 'Spring Security'
 allprojects {
@@ -79,25 +80,23 @@ artifacts {
 
 apply from: "$rootDir/gradle/ide-integration.gradle"
 
-apply plugin: 'maven'
-
 configurations {
     deployerJars {
         description = 'Jars needed for doing deployment to JBoss Nexus repo'
     }
- }
+}
+
+repositories {
+    mavenCentral()
+}
 
 // appropriately inject the common dependencies into each sub-project
 dependencies {
     deployerJars "org.apache.maven.wagon:wagon-http:1.0"
 }
 
-assemble.doLast( { install } )
-uploadArchives.dependsOn install
-
 uploadArchives {
     repositories.mavenDeployer {
-            name = 'jbossDeployer'
             configuration = configurations.deployerJars
             repository(url: "https://repo.seeburger.de/archiva/repository/release/")
     }
